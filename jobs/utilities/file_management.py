@@ -1,13 +1,21 @@
 import os
 import shutil
 from subprocess import run
+from contextlib import contextmanager
+
+
 
 image_extensions = (".jpg", ".jpeg", ".png")
 
 
-def assert_folder(target: str):
-    if not os.path.exists(target):
-        os.mkdir(target)
+
+@contextmanager
+def run_in_folder(folder):
+    base_dir = os.getcwd()
+    assert_folder(folder)
+    os.chdir(folder)
+    yield
+    os.chdir(base_dir)
 
 
 def is_img(res: str) -> bool:

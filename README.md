@@ -5,14 +5,15 @@ simple tasks
 
 ## features
 
-done
+done:
 
 - backup a folder
-
-pending
-
-- compress contents of a folder with 7zip
 - compress images in a folder with cwebp
+
+pending:
+
+- implement integration tests
+- compress contents of a folder with 7zip
 - download a list of videos
 - download content of a repository
 

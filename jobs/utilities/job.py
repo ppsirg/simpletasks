@@ -6,9 +6,6 @@ from subprocess import run
 from concurrent.futures import ThreadPoolExecutor
 
 
-px = ThreadPoolExecutor(max_workers=3)
-
-
 class CommandLineJob:
     """
     This code defines a class called CommandLineJob in Python.
@@ -24,6 +21,9 @@ class CommandLineJob:
 
     class Meta:
         abstract = True
+
+    def __init__(self, *args, **kwargs) -> None:
+        self.px = ThreadPoolExecutor(max_workers=5)
 
     @staticmethod
     def _wrp_run_cmd(command):
@@ -98,5 +98,5 @@ class PausedJob(CommandLineJob):
             await asyncio.sleep(self.stop_time)
             self.notify("resume job")
             self.start_time = time()
-        rs = await lp.run_in_executor(px, self._wrp_run_cmd, command)
+        rs = await lp.run_in_executor(self.px, self._wrp_run_cmd, command)
         return rs
