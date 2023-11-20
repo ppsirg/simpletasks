@@ -76,6 +76,14 @@ def is_dir(path: str):
         raise NotADirectoryError
     else:
         return path
+    
+
+def is_file(path: str):
+    if not os.path.isfile(path):
+        raise NotADirectoryError
+    else:
+        return path
+
 
 
 def move_content(content: str, target: str):
