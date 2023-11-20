@@ -24,7 +24,6 @@ class CleanFolderJob(PausedJob):
         )
         self.args = self.parser.parse_args()
 
-
     async def run(self):
         self.parse_args()
         folders = list_folders(self.args.target)

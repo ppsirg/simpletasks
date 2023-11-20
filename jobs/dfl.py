@@ -1,7 +1,14 @@
 import os
 import asyncio
 from utilities.job import PausedJob
-from utilities.file_management import list_folders, list_img, list_processed_img, assert_folder, run_in_folder, image_extensions
+from utilities.file_management import (
+    list_folders,
+    list_img,
+    list_processed_img,
+    assert_folder,
+    run_in_folder,
+    image_extensions,
+)
 
 
 class DeflateImageJob(PausedJob):
@@ -9,8 +16,9 @@ class DeflateImageJob(PausedJob):
     it search all images and turn them into webp images that are more
     size efficient.
     """
-    destination_pref = '_mn'
-    image_quality = '80'
+
+    destination_pref = "_mn"
+    image_quality = "80"
 
     def parse_args(self):
         super().parse_args()
@@ -59,7 +67,8 @@ class DeflateImageJob(PausedJob):
             ]
             copy_job = [
                 self.copy_processed(
-                    os.path.join(target, a), os.path.join(target, f"{a}_{self.destination_pref}")
+                    os.path.join(target, a),
+                    os.path.join(target, f"{a}_{self.destination_pref}"),
                 )
                 for a in folders
             ]
@@ -67,7 +76,8 @@ class DeflateImageJob(PausedJob):
 
             compress_job = [
                 self.compress_img(
-                    os.path.join(target, a), os.path.join(target, f"{a}_{self.destination_pref}")
+                    os.path.join(target, a),
+                    os.path.join(target, f"{a}_{self.destination_pref}"),
                 )
                 for a in folders
             ]
@@ -76,7 +86,8 @@ class DeflateImageJob(PausedJob):
 
             copy_job = [
                 self.copy_processed(
-                    os.path.join(target, a), os.path.join(target, f"{a}_{self.destination_pref}")
+                    os.path.join(target, a),
+                    os.path.join(target, f"{a}_{self.destination_pref}"),
                 )
                 for a in folders
             ]
@@ -111,7 +122,7 @@ class DeflateImageJob(PausedJob):
             resp = await asyncio.gather(*process_pool)
 
         return resp
-    
+
     @staticmethod
     def webp_replace(self, img: str):
         for xts in image_extensions:

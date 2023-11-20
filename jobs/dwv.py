@@ -12,8 +12,7 @@ from utilities.file_management import is_dir, is_file, run_in_folder
 
 
 class DownloadJob(PausedJob):
-    """Download videos in a file in folders
-    """
+    """Download videos in a file in folders"""
 
     def parse_args(self):
         super().parse_args()
@@ -39,7 +38,7 @@ class DownloadJob(PausedJob):
                     pool.append(self.download_video(vid))
                 await asyncio.gather(*pool)
 
-    def load_file(self)->List:
+    def load_file(self) -> List:
         with open(self.args.file) as fl:
             try:
                 data = yaml.safe_load(fl.read())
@@ -49,14 +48,14 @@ class DownloadJob(PausedJob):
                 data = self.custom_load(fl)
             finally:
                 return data
-            
-    def custom_load(self, file_descriptor)->Dict:
+
+    def custom_load(self, file_descriptor) -> Dict:
         txt = file_descriptor.read()
-        lines = (cl for a in txt.split('\n') if len((cl := a.strip())) > 1)
+        lines = (cl for a in txt.split("\n") if len((cl := a.strip())) > 1)
         data = {}
-        current_folder = 'default'
+        current_folder = "default"
         for ln in lines:
-            if ln.startswith('#'):
+            if ln.startswith("#"):
                 folder_name = ln[1:]
                 data[folder_name] = []
                 current_folder = folder_name
@@ -64,12 +63,14 @@ class DownloadJob(PausedJob):
                 data[current_folder].append(ln)
         return data
 
-
-
     async def download_video(self, vid_url):
         with YoutubeDL() as ydl:
-            ydl.download([vid_url])
+            try:
+                ydl.download([vid_url])
+            except Exception as err:
+                self.notify(f"[{type(err)}] -> {err}")
         # return await self.run_cmd(['poetry', 'run','yt_dlp', vid_url])
+
 
 if __name__ == "__main__":
     bk = DownloadJob()

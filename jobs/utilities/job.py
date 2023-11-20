@@ -91,12 +91,14 @@ class PausedJob(CommandLineJob):
         tm = time()
         return (tm - self.start_time) > self.max_time
 
-    async def run_cmd(self, command):
+    async def run_cmd(self, command, px="default"):
         lp = asyncio.get_event_loop()
         if self.is_elapsed:
             self.notify("start waiting to save disk")
             await asyncio.sleep(self.stop_time)
             self.notify("resume job")
             self.start_time = time()
-        rs = await lp.run_in_executor(self.px, self._wrp_run_cmd, command)
+        rs = await lp.run_in_executor(
+            self.px if px == "default" else px, self._wrp_run_cmd, command
+        )
         return rs
