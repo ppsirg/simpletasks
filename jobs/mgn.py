@@ -4,6 +4,7 @@ import asyncio
 import pdb
 
 from typing import Dict, List
+from subprocess import run
 
 from utilities.job import PausedJob
 from utilities.file_management import is_dir, is_file, run_in_folder
@@ -29,14 +30,12 @@ class MagnetHelperJob(PausedJob):
     async def run(self):
         self.parse_args()
         to_download = self.load_file()
+        lp = asyncio.get_event_loop()
         for magnet in to_download:
-            await self.run_cmd(
-                ["transmission-cli", "-w", self.args.target, "-v", magnet], px=None
+            self.pool.append(
+                lp.run_in_executor(None, run, ["transmission-gtk", magnet])
             )
-            # await self.run_cmd(['transmission-gtk', magnet])
-            self.notify(f"descargando {magnet[-10:]}")
-            await asyncio.sleep(5)
-            print("---")
+        await asyncio.gather(*self.pool)
 
     def load_file(self) -> List:
         with open(self.args.file) as fl:
