@@ -17,13 +17,8 @@ class MagnetHelperJob(PausedJob):
         super().parse_args()
         self.parser.add_argument(
             "file",
-            help="file to search",
+            help="file with magnet links",
             type=is_file,
-        )
-        self.parser.add_argument(
-            "target",
-            help="folder to clean",
-            type=is_dir,
         )
         self.args = self.parser.parse_args()
 
